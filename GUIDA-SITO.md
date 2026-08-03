@@ -8,10 +8,13 @@ Tutto quello che serve è dentro questa cartella. Non c'è niente da installare,
 
 | File | A cosa serve |
 |---|---|
-| `index.html` | Il sito vero e proprio (una pagina sola, con tutte le sezioni) |
+| `index.html` | La pagina iniziale: copertina col telefono 3D, "come funziona", invito a scaricare |
+| `funzioni.html` | La pagina interna: cosa c'è dentro, Spendy Premium, dati e domande frequenti |
 | `privacy.html` | Informativa privacy — **obbligatoria** per pubblicare su Google Play |
 | `termini.html` | Termini d'uso |
 | `robots.txt` | Dice ai motori di ricerca che il sito si può indicizzare |
+| `assets/stile.css` | Il foglio di stile condiviso tra le pagine |
+| `assets/script.js` | Le animazioni e i comportamenti, condivisi tra le pagine |
 | `assets/favicon.svg` | L'iconcina che si vede nella scheda del browser |
 | `assets/og-image.png` | L'immagine che compare quando qualcuno condivide il link su WhatsApp, Telegram, Facebook |
 
@@ -25,9 +28,9 @@ Cerca queste scritte nei file e sostituiscile. Sono poche e sono tutte in maiusc
 
 **In `index.html`:**
 
-1. **Il link al Play Store.** Tutti i bottoni "Scarica per Android" hanno `href="#"` come segnaposto. Quando l'app è approvata, cerca `data-link="android"` (compare 3 volte: navigazione, copertina e chiusura) e sostituisci `#` con il link del Play Store.
+1. **Il link al Play Store.** Tutti i bottoni "Scarica per Android" hanno `href="#"` come segnaposto. Quando l'app è approvata, cerca `data-link="android"` **in entrambe le pagine** (`index.html` e `funzioni.html`) e sostituisci `#` con il link del Play Store.
 
-2. **L'indirizzo email.** Cerca `INDIRIZZO@EMAIL.IT` (è nel piè di pagina, alla voce "Assistenza").
+2. **L'indirizzo email.** Cerca `INDIRIZZO@EMAIL.IT` nel piè di pagina di entrambe le pagine.
 
 **In `privacy.html` e `termini.html`:**
 
@@ -72,9 +75,12 @@ Quando compili la scheda dell'app ti chiederanno questi due link:
 
 ## 5. Cosa ho verificato e cosa no
 
-**Verificato con test automatici (56 controlli, tutti superati):**
-- il sito si carica senza errori JavaScript;
-- nessun link interno rotto;
+**Verificato con test automatici (72 controlli, tutti superati):**
+- lo script si esegue senza errori su entrambe le pagine (con ripiego anche per browser molto vecchi);
+- nessun link rotto, né dentro le pagine né tra una pagina e l'altra;
+- il menu a scomparsa per telefono esiste su entrambe le pagine e contiene tutte le voci;
+- le bolle di colore sono presenti in entrambe le pagine, fisse e pulsanti;
+- il carosello mobile dei passaggi è collegato al cambio di schermata del telefono;
 - se il browser è vecchio e non supporta le animazioni allo scorrimento, i contenuti restano comunque tutti visibili (nessuna sezione invisibile per errore);
 - le domande frequenti si aprono una alla volta;
 - l'impaginazione si riduce correttamente a una colonna su telefono;
@@ -93,12 +99,13 @@ Quando compili la scheda dell'app ti chiederanno questi due link:
 
 ## 6. Perché il sito è fatto così (in due parole)
 
-Il sito riprende l'app: grafite scuro (#121619 di fondo, #1F2329 per le schede) e lime (#A8E636, leggermente spento rispetto al #B6FF2E dell'app per non abbagliare su schermi grandi).
+Il sito riprende l'app: grafite scuro (#121619 di fondo, #1F2329 per le schede) e lime (#A8E636, leggermente spento rispetto al #B6FF2E dell'app per non abbagliare su schermi grandi). È diviso in due pagine: la iniziale racconta e convince, `funzioni.html` approfondisce (funzioni, Premium, dati, domande).
 
-- **La copertina** ha il telefono Android al centro con effetto 3D: si inclina seguendo il mouse, con i bagliori lime e verde-acqua che si muovono in parallasse dietro, e due schedine fluttuanti ai lati.
-- **Gli effetti col cursore**: un faro luminoso che segue il mouse nella copertina, le schede che si illuminano sotto il puntatore, il bottone principale che si "attacca" leggermente al cursore.
-- **Il telefono della sezione centrale** resta fermo mentre scorri e cambia tra 5 schermate ricostruite dai tuoi screenshot (tastierino, panoramica, ricorrenti, salvadanai, statistiche Premium). Nel tastierino l'importo si digita da solo.
-- **Tutti gli importi nelle schermate sono inventati** a scopo illustrativo, come richiesto: nessun dato reale dei tuoi screenshot è stato riusato.
+- **Le bolle di colore** (lime, verde-acqua, viola) vagano e pulsano su tutto il sito, in entrambe le pagine, dietro ai contenuti.
+- **La copertina** ha il telefono Android al centro con effetto 3D marcato che segue il mouse. Da telefono, dove il mouse non c'è, il telefono ondeggia da solo.
+- **Gli effetti col cursore** (solo da computer): faro luminoso che segue il mouse, schede che si illuminano sotto il puntatore, bottone principale "magnetico".
+- **Come funziona, da computer**: il telefono resta fermo mentre scorri i 5 passaggi e cambia schermata da solo. **Da telefono**: i 5 passaggi diventano schede da sfogliare col dito, e la schermata del telefono cambia mentre sfogli.
+- **Tutti gli importi nelle schermate sono inventati** a scopo illustrativo: nessun dato reale dei tuoi screenshot è stato riusato.
 - Chi ha "riduci animazioni" attivo nel sistema vede il sito fermo ma completo.
 
 Quando avrai screenshot definitivi dell'app, si possono mettere le immagini vere dentro il telefono al posto delle schermate ricostruite: basta chiedermelo nella prossima sessione.
