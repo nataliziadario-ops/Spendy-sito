@@ -169,7 +169,11 @@
   var steps = document.querySelectorAll('.step[data-step]');
   var shots = document.querySelectorAll('.shot[data-shot]');
   var stepsWrap = document.querySelector('.steps');
+  var phPrev = document.getElementById('phPrev');
+  var phNext = document.getElementById('phNext');
+  var curShot = 0;
   function showShot(i){
+    curShot = parseInt(i, 10) || 0;
     shots.forEach(function(s){
       var on = s.getAttribute('data-shot') === String(i);
       var was = s.classList.contains('on-shot');
@@ -179,12 +183,49 @@
         if (s.getAttribute('data-shot') === '0') typeAmount();
       }
     });
+    if (phPrev) phPrev.classList.toggle('dis', curShot <= 0);
+    if (phNext) phNext.classList.toggle('dis', curShot >= shots.length - 1);
+  }
+  /* le schede orizzontali comandano? */
+  function carouselMode(){
+    return stepsWrap && stepsWrap.scrollWidth > stepsWrap.clientWidth + 4;
+  }
+  /* salto diretto a una schermata (frecce e sfioramento) */
+  function goTo(i){
+    i = Math.min(Math.max(i, 0), shots.length - 1);
+    showShot(i);
+    if (carouselMode() && typeof stepsWrap.scrollTo === 'function'){
+      var max = stepsWrap.scrollWidth - stepsWrap.clientWidth;
+      try { stepsWrap.scrollTo({left: max * i / (shots.length - 1), behavior:'smooth'}); }
+      catch (e) { stepsWrap.scrollLeft = max * i / (shots.length - 1); }
+    }
+  }
+  if (phPrev) phPrev.addEventListener('click', function(){ goTo(curShot - 1); });
+  if (phNext) phNext.addEventListener('click', function(){ goTo(curShot + 1); });
+
+  /* sfioramento orizzontale direttamente sopra il telefono */
+  var featPhone = document.getElementById('featPhone');
+  if (featPhone && shots.length){
+    var swX = null, swY = null;
+    featPhone.addEventListener('touchstart', function(ev){
+      if (!ev.touches || !ev.touches.length) return;
+      swX = ev.touches[0].clientX;
+      swY = ev.touches[0].clientY;
+    }, {passive:true});
+    featPhone.addEventListener('touchend', function(ev){
+      if (swX === null || !ev.changedTouches || !ev.changedTouches.length) return;
+      var dx = ev.changedTouches[0].clientX - swX;
+      var dy = ev.changedTouches[0].clientY - swY;
+      swX = swY = null;
+      if (Math.abs(dx) < 42 || Math.abs(dx) < Math.abs(dy) * 1.2) return; /* era uno scorrimento verticale */
+      goTo(curShot + (dx < 0 ? 1 : -1));
+    }, {passive:true});
   }
   if (steps.length && shots.length){
     if ('IntersectionObserver' in window){
       var io2 = new IntersectionObserver(function(entries){
         /* quando le schede scorrono in orizzontale comanda il carosello, non lo scorrimento della pagina */
-        if (stepsWrap && stepsWrap.scrollWidth > stepsWrap.clientWidth + 4) return;
+        if (carouselMode()) return;
         entries.forEach(function(e){
           if (e.isIntersecting) showShot(e.target.getAttribute('data-step'));
         });
@@ -195,7 +236,7 @@
     if (stepsWrap){
       var swipeTimer = null;
       stepsWrap.addEventListener('scroll', function(){
-        if (stepsWrap.scrollWidth <= stepsWrap.clientWidth + 4) return;
+        if (!carouselMode()) return;
         clearTimeout(swipeTimer);
         swipeTimer = setTimeout(function(){
           var max = stepsWrap.scrollWidth - stepsWrap.clientWidth;
@@ -206,6 +247,58 @@
     }
   }
   typeAmount();
+
+  /* ----- la chicca: da telefono vero, quello in copertina segue l'inclinazione -----
+     Usa i sensori del dispositivo (deviceorientation). Si attiva solo su touch e richiede HTTPS.
+     Su Android parte da solo; su iPhone Apple esige un tocco di consenso, quindi
+     compare un bottone che chiama DeviceOrientationEvent.requestPermission(). */
+  if (phone3d && !fine && !reduce && 'DeviceOrientationEvent' in window){
+    var gyroBase = null, gtX = 0, gtY = 0, gcX = 0, gcY = 0, gyroRunning = false;
+    function gyroLoop(){
+      gcX += (gtX - gcX) * .12;
+      gcY += (gtY - gcY) * .12;
+      phone3d.style.transform = 'rotateY(' + (gcY * 18).toFixed(2) + 'deg) rotateX(' + (-gcX * 12).toFixed(2) + 'deg)';
+      if (Math.abs(gtX - gcX) > .002 || Math.abs(gtY - gcY) > .002) raf(gyroLoop);
+      else gyroRunning = false;
+    }
+    function onOrient(e){
+      if (e.beta == null || e.gamma == null) return;
+      if (!gyroBase){
+        gyroBase = { b: e.beta, g: e.gamma };
+        phone3d.classList.add('gyro'); /* spegne l'ondeggiamento automatico */
+      }
+      /* il punto zero insegue lentamente la posizione media, così se cambi presa non resta storto */
+      gyroBase.b += (e.beta - gyroBase.b) * .004;
+      gyroBase.g += (e.gamma - gyroBase.g) * .004;
+      gtY = Math.max(-1, Math.min(1, (e.gamma - gyroBase.g) / 26));
+      gtX = Math.max(-1, Math.min(1, (e.beta - gyroBase.b) / 26));
+      if (!gyroRunning){ gyroRunning = true; raf(gyroLoop); }
+    }
+    if (typeof DeviceOrientationEvent.requestPermission === 'function'){
+      /* iPhone e iPad: serve il consenso con un tocco */
+      var gyroBtn = document.getElementById('gyroBtn');
+      if (gyroBtn){
+        gyroBtn.hidden = false;
+        gyroBtn.addEventListener('click', function(){
+          DeviceOrientationEvent.requestPermission().then(function(stato){
+            if (stato === 'granted'){
+              window.addEventListener('deviceorientation', onOrient);
+              gyroBtn.hidden = true;
+            } else {
+              gyroBtn.textContent = 'Permesso negato dal sistema';
+              gyroBtn.disabled = true;
+            }
+          }).catch(function(){
+            gyroBtn.textContent = 'Sensori non disponibili';
+            gyroBtn.disabled = true;
+          });
+        });
+      }
+    } else {
+      /* Android: nessun permesso richiesto, si parte subito */
+      window.addEventListener('deviceorientation', onOrient);
+    }
+  }
 
   /* ----- una sola domanda aperta alla volta ----- */
   var dets = document.querySelectorAll('.faq details');

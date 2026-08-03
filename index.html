@@ -70,6 +70,7 @@
   </div>
 
   <div class="stage" id="stage">
+    <button class="gyro-btn" id="gyroBtn" hidden>✦ Tocca per far muovere il telefono con il tuo</button>
     <div class="phone3d" id="phone3d">
       <div class="float-card fc-left" data-px="-14" aria-hidden="true">
         <span class="fc-label">Patrimonio</span>
@@ -138,7 +139,9 @@
 
     <div class="feat">
       <div class="phone-col">
-        <div class="phone" aria-hidden="true">
+        <button class="ph-arrow prev dis" id="phPrev" aria-label="Schermata precedente"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="ph-arrow next" id="phNext" aria-label="Schermata successiva"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+        <div class="phone" id="featPhone" aria-hidden="true">
           <div class="screen">
 
             <!-- 0 · tastierino -->

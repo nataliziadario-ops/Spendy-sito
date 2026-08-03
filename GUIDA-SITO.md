@@ -75,12 +75,15 @@ Quando compili la scheda dell'app ti chiederanno questi due link:
 
 ## 5. Cosa ho verificato e cosa no
 
-**Verificato con test automatici (72 controlli, tutti superati):**
+**Verificato con test automatici (88 controlli, tutti superati):**
 - lo script si esegue senza errori su entrambe le pagine (con ripiego anche per browser molto vecchi);
 - nessun link rotto, né dentro le pagine né tra una pagina e l'altra;
 - il menu a scomparsa per telefono esiste su entrambe le pagine e contiene tutte le voci;
 - le bolle di colore sono presenti in entrambe le pagine, fisse e pulsanti;
 - il carosello mobile dei passaggi è collegato al cambio di schermata del telefono;
+- le freccette ai lati del telefono esistono, si animano, si spengono a inizio e fine corsa e muovono anche il carosello;
+- lo sfioramento sopra il telefono cambia schermata solo se è orizzontale (quello verticale continua a scorrere la pagina);
+- il codice del giroscopio ascolta i sensori, calibra il punto zero e spegne l'ondeggiamento automatico quando prende il controllo;
 - se il browser è vecchio e non supporta le animazioni allo scorrimento, i contenuti restano comunque tutti visibili (nessuna sezione invisibile per errore);
 - le domande frequenti si aprono una alla volta;
 - l'impaginazione si riduce correttamente a una colonna su telefono;
@@ -89,6 +92,7 @@ Quando compili la scheda dell'app ti chiederanno questi due link:
 - nessun numero inventato sull'app (utenti, recensioni, prezzi): il sito non dichiara cifre che non possiamo dimostrare.
 
 **Non ho potuto verificare da qui — controlla tu quando lo apri:**
+- **il giroscopio su un telefono vero**: la reattività va giudicata in mano — se risulta troppo nervoso o troppo pigro si tara con due numeri. Su iPhone in particolare va provato il giro completo: tocco sul bottone → richiesta di permesso del sistema → movimento;
 - **l'aspetto reale**: in questo ambiente non ho un browser, quindi ho controllato la struttura ma non ho visto la pagina renderizzata. Aprila su computer e su telefono prima di diffonderla;
 - la resa dei caratteri se il dispositivo è offline (i caratteri arrivano da Google Fonts; se non si caricano il sito resta leggibile con i caratteri di sistema, ma cambia un po' l'aspetto);
 - come appare l'anteprima quando condividi il link su WhatsApp (funziona solo dopo che il sito è online con un indirizzo vero).
@@ -104,7 +108,8 @@ Il sito riprende l'app: grafite scuro (#121619 di fondo, #1F2329 per le schede) 
 - **Le bolle di colore** (lime, verde-acqua, viola) vagano e pulsano su tutto il sito, in entrambe le pagine, dietro ai contenuti.
 - **La copertina** ha il telefono Android al centro con effetto 3D marcato che segue il mouse. Da telefono, dove il mouse non c'è, il telefono ondeggia da solo.
 - **Gli effetti col cursore** (solo da computer): faro luminoso che segue il mouse, schede che si illuminano sotto il puntatore, bottone principale "magnetico".
-- **Come funziona, da computer**: il telefono resta fermo mentre scorri i 5 passaggi e cambia schermata da solo. **Da telefono**: i 5 passaggi diventano schede da sfogliare col dito, e la schermata del telefono cambia mentre sfogli.
+- **Come funziona, da computer**: il telefono resta fermo mentre scorri i 5 passaggi e cambia schermata da solo. **Da telefono**: i 5 passaggi diventano schede da sfogliare col dito, la schermata cambia mentre sfogli, e puoi anche sfogliare direttamente sopra il telefono o toccare le freccette animate ai suoi lati.
+- **Il giroscopio**: da telefono vero, il telefono in copertina si inclina seguendo come inclini il dispositivo. Si attiva da solo su Android; richiede che il sito sia online in HTTPS (GitHub Pages e Netlify lo sono — aprendo il file in locale potrebbe non funzionare). Su iPhone Apple richiede un consenso: compare automaticamente un bottone "Tocca per far muovere il telefono con il tuo" sotto il telefono — al tocco il sistema chiede il permesso e, se accettato, il movimento parte anche lì. Su Android il bottone non compare mai.
 - **Tutti gli importi nelle schermate sono inventati** a scopo illustrativo: nessun dato reale dei tuoi screenshot è stato riusato.
 - Chi ha "riduci animazioni" attivo nel sistema vede il sito fermo ma completo.
 

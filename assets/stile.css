@@ -175,6 +175,16 @@ h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.09
 .stage{position:relative;z-index:1;margin-top:clamp(44px,6vw,72px);perspective:1400px;
   display:flex;justify-content:center;padding-bottom:clamp(56px,8vw,100px)}
 .phone3d{position:relative;will-change:transform;transform-style:preserve-3d;animation:heroFloat 7s ease-in-out infinite}
+/* bottone di consenso ai sensori (compare solo su iPhone/iPad) */
+.gyro-btn{position:absolute;bottom:clamp(14px,3vw,34px);left:50%;transform:translateX(-50%);z-index:5;
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--lime);
+  background:rgba(31,35,41,.88);border:1px solid rgba(168,230,54,.4);border-radius:999px;
+  padding:10px 16px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 24px -10px rgba(0,0,0,.7);
+  animation:gyroPulse 2.4s ease-in-out infinite}
+.gyro-btn[hidden]{display:none}
+.gyro-btn:disabled{color:var(--soft);border-color:var(--line-strong);animation:none;cursor:default}
+@keyframes gyroPulse{0%,100%{box-shadow:0 10px 24px -10px rgba(0,0,0,.7),0 0 0 0 rgba(168,230,54,.25)}
+  50%{box-shadow:0 10px 24px -10px rgba(0,0,0,.7),0 0 0 9px rgba(168,230,54,0)}}
 @keyframes heroFloat{0%,100%{translate:0 0}50%{translate:0 -12px}}
 /* da telefono niente mouse: il telefono ondeggia da solo */
 @media (hover:none){
@@ -303,6 +313,22 @@ h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.09
 .phone-col{position:sticky;top:110px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .swipe-hint{display:none;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--soft)}
+/* frecce ai lati del telefono (si vedono dove si sfoglia col dito) */
+.ph-arrow{display:none;position:absolute;top:42%;z-index:6;width:44px;height:44px;border-radius:50%;
+  background:rgba(31,35,41,.88);border:1px solid var(--line-strong);color:var(--lime);cursor:pointer;
+  align-items:center;justify-content:center;padding:0;box-shadow:0 10px 24px -10px rgba(0,0,0,.7);
+  transition:opacity .3s,transform .2s}
+.ph-arrow svg{width:19px;height:19px}
+.ph-arrow.prev{left:2px;animation:nudgeL 1.7s ease-in-out infinite}
+.ph-arrow.next{right:2px;animation:nudgeR 1.7s ease-in-out infinite .35s}
+.ph-arrow:active{transform:scale(.92)}
+.ph-arrow.dis{opacity:.22;pointer-events:none;animation:none}
+@keyframes nudgeR{0%,100%{translate:0 0}50%{translate:5px 0}}
+@keyframes nudgeL{0%,100%{translate:0 0}50%{translate:-5px 0}}
+
+/* quando il giroscopio guida il telefono, l'ondeggiamento automatico si spegne */
+.phone3d.gyro{animation:heroFloat 7s ease-in-out infinite}
+
 .shot{position:absolute;inset:0;opacity:0;transform:translateY(14px) scale(.985);
   transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.3,1);pointer-events:none}
 .shot.on-shot{opacity:1;transform:none}
@@ -394,6 +420,7 @@ footer{border-top:1px solid var(--line);padding-block:44px;font-size:14.5px;colo
   /* le schede dei passaggi si sfogliano col dito sotto il telefono */
   .feat{grid-template-columns:1fr;gap:20px}
   .phone-col{position:relative;top:0}
+  .ph-arrow{display:flex}
   .phone{width:min(240px,66vw)}
   .swipe-hint{display:block}
   .steps{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;
